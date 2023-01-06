@@ -13,4 +13,46 @@ postRouter.post('/addReportToUser', async (req, res) => {
     
   })
 
+//delete all the groups that the user create
+postRouter.post('/deleteUserGroups', async (req, res) => {
+  const userList = await post_functions.deleteUserGroups(req.query.uid)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+  
+})
+
+//delete all the groups that the user joined
+postRouter.post('/deleteUserJoinedGroups', async (req, res) => {
+  const userList = await post_functions.deleteUserJoinedGroups(req.query.uid)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+  
+})
+
+
+//update user details
+postRouter.post('/updateUserDetails', async (req, res) => {
+  const userList = await post_functions.updateUserDetails(req.query.uid, req.query.name, req.query.birth_date, req.query.phone)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+  
+})
+
+
+//update group details
+postRouter.post('/updateGroupDetails', async (req, res) => {
+  const userList = await post_functions.updateGroupDetails(req.query.gid, req.query.title, req.query.city, req.query.date, req.query.time, req.query.num_of_participant)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+  
+})
+
 export { postRouter }
