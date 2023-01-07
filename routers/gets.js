@@ -42,4 +42,22 @@ getRouter.get('/presentGroupParticipants', async(req, res) =>{
   return res.status(200).send(usersList)
 })
 
+// Get a list of users to the block page 
+getRouter.get('/presentReportedUsers', async (req, res) => {
+  const userList = await get_functions.getReportedUsers()
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send(userList)
+})
+
+//Check if the user is blocked
+getRouter.get('/checkBlockedUser', async(req, res) =>{
+  const groupsList = await get_functions.checkBlockedUser(req.query.uid)
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
 export { getRouter }

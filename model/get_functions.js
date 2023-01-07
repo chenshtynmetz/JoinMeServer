@@ -88,3 +88,27 @@ export async function getGroupParticipants(gid){
     return null
   }
 }
+
+// Get a list of users that had been reported
+export async function getReportedUsers() {
+  const q = fb.query(fb.collection(db, 'usersById'), fb.where("num_of_reports", "!=", 0));
+  const userSnapshot = await fb.getDocs(q)
+  const userListFromDB = userSnapshot.docs || []
+  const userList = userListFromDB.map(doc=> {
+    const {name, num_of_reports} = doc.data()
+    return {name, num_of_reports}
+  })
+  return userList;
+}
+
+//Check if the user is blocked
+export async function checkBlockedUser(uid){
+  const userRef = fb.doc(db, 'blockUsers', uid)
+  const userDoc = await fb.getDoc(userRef)
+  if(userDoc.exists()){
+    return "blocked"
+  }
+  else{
+    return "not blocked"
+  }
+}

@@ -55,4 +55,41 @@ postRouter.post('/updateGroupDetails', async (req, res) => {
   
 })
 
+//add new user to the database
+postRouter.post('/addUser', async (req, res) => {
+  const userList = await post_functions.addUserToDb(req.query.user)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+})
+
+//add new group to the database
+postRouter.post('/addGroup', async (req, res) => {
+  const userList = await post_functions.addGroupToDb(req.query.group)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+})
+
+//add user to group
+postRouter.post('/addUserToGroup', async (req, res) => {
+  const userList = await post_functions.addUserToGroup(req.query.gid, req.query.uid)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+})
+
+//block user
+postRouter.post('/blockThisUser', async (req, res) => {
+  const userList = await post_functions.blockUser(req.query.uid)
+  if (userList.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+})
+
+
 export { postRouter }

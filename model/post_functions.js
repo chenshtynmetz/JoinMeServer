@@ -78,11 +78,11 @@ export async function deleteUserJoinedGroups(uid) {
             const groupDoc = await fb.getDoc(groupRef)
             if(groupDoc.exists()){
                 for(var j=0; j<groupDoc.data().participants.length; j++){
-                    var updateParticipants = []
+                    var updateParticipants = []//take out of the inside loop
                         if(groupDoc.data().participants[j] != uid){
                             updateParticipants.push(groupDoc.data().participants[j])
                         }
-                        await fb.updateDoc(groupRef, {participants: updateParticipants})
+                        await fb.updateDoc(groupRef, {participants: updateParticipants})//take out of the inside loop
                     }
                 }
             }
@@ -126,5 +126,79 @@ export async function updateGroupDetails(gid, title, city, date, time, num_of_pa
     }
 }
 
+//add new user to the database
+export async function addUserToDb(user) {
+    await fb.setDoc(fb.doc(db, "usersById", user.uid), user);
+    return "done"
+}
+
+//add new group to the database
+export async function addGroupToDb(group) {
+    await fb.addDoc(fb.doc(db, "usersById"), group);
+    //add group to user db
+    const userRef = fb.doc(db, 'usersById', group.head_of_group)
+    const userDoc = await fb.getDoc(userRef)
+    if(userDoc.exists()){
+        myGroups = []
+        for(var i=0; i<userDoc.data().my_groups.length; i++){
+            myGroups.push(userDoc.data().my_groups[i])
+        }
+        myGroups.push(group)
+        await fb.updateDoc(userRef, {my_groups: myGroups})
+    }
+    else{
+        console.log("error")
+    }
+    return "done"
+}
+
+//add user to group
+export async function addUserToGroup(gid, uid) {
+    //add group to user db
+    const userRef = fb.doc(db, 'usersById', uid)
+    const userDoc = await fb.getDoc(userRef)
+    if(userDoc.exists()){
+        myGroups = []
+        for(var i=0; i<userDoc.data().groups_I_joined.length; i++){
+            myGroups.push(userDoc.data().groups_I_joined[i])
+        }
+        myGroups.push(gid)
+        await fb.updateDoc(userRef, {groups_I_joined: myGroups})
+    }
+    else{
+        console.log("error")
+    }
+
+    //add user to group db
+    const groupRef = fb.doc(db, 'groups', gid)
+    const groupDoc = await fb.getDoc(groupRef)
+    if(groupDoc.exists()){
+        groupUsers = []
+        for(var i=0; i<groupDoc.data().participants.length; i++){
+            groupUsers.push(groupDoc.data().participants[i])
+        }
+        groupUsers.push(uid)
+        await fb.updateDoc(groupRef, {participants: groupUsers})
+    }
+    else{
+        console.log("error")
+    }
+    return "done"
+}
+
+//add user to blockUsers collection
+export async function blockUser(uid) {
+    const userRef = fb.doc(db, 'usersById', uid)
+    const userDoc = await fb.getDoc(userRef)
+    console.log("here")
+    if(userDoc.exists()){
+        await fb.setDoc(fb.doc(db, "blockUsers", uid), userDoc.data());
+        await fb.deleteDoc(fb.doc(db, "usersById", uid))
+    }
+    else{
+        console.log("error")
+    }
+    return "done"
+}
 
 //todo: להוסיף בדיקת תקינות לעדכוני פרטים(תאריכים וכו)
