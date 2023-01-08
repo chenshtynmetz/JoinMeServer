@@ -26,7 +26,7 @@ postRouter.post('/deleteUserGroups', async (req, res) => {
 //delete all the groups that the user joined
 postRouter.post('/deleteUserJoinedGroups', async (req, res) => {
   const userList = await post_functions.deleteUserJoinedGroups(req.query.uid)
-  if (userList.length === 0 ) {
+  if (userList.length === 0) {
     return res.status(404).send()
   }
   return res.status(200).send("done")

@@ -38,8 +38,8 @@ export async function getMyCreatedHistory(uid){
     for(var i=0; i<userDoc.data().my_groups.length; i++){
       const groupRef = fb.doc(db, 'groups', userDoc.data().my_groups[i])
       const groupDoc = await fb.getDoc(groupRef)
-      const data = groupDoc.data()
-      groupsList[i] = [data.title, data.city, data.date, data.time, data.is_happened, userDoc.data().my_groups[i]]
+      const {title, city, date, time, is_happened, gid} = groupDoc.data()
+      groupsList[i] = {title, city, date, time, is_happened, gid}
     }
     return groupsList
   }
@@ -58,8 +58,8 @@ export async function getMyJoinedHistory(uid){
     for(var i=0; i<userDoc.data().groups_I_joined.length; i++){
       const groupRef = fb.doc(db, 'groups', userDoc.data().groups_I_joined[i])
       const groupDoc = await fb.getDoc(groupRef)
-      const data = groupDoc.data()
-      groupsList[i] = [data.title, data.city, data.date, data.time, data.is_happened, userDoc.data().groups_I_joined[i]]
+      const {title, city, date, time, is_happened, gid} = groupDoc.data()
+      groupsList[i] = {title, city, date, time, is_happened, gid}
     }
     return groupsList
   }
@@ -78,8 +78,10 @@ export async function getGroupParticipants(gid){
     for(var i=0; i<groupDoc.data().participants.length; i++){
       const userRef = fb.doc(db, 'usersById', groupDoc.data().participants[i])
       const userDoc = await fb.getDoc(userRef)
-      const data = userDoc.data()
-      usersList[i] = [data.name, data.mail, data.phone, groupDoc.data().participants[i]]
+      const {name, mail, phone, uid} = userDoc.data()
+      usersList[i] = {name, mail, phone, uid}
+      // const data = userDoc.data()
+      // usersList[i] = [data.name, data.mail, data.phone, groupDoc.data().participants[i]]
     }
     return usersList
   }

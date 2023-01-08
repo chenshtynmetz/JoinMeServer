@@ -67,7 +67,6 @@ export async function deleteUserGroups(uid) {
     }
 }
 
-//todo: chek why this delete all the participants!!!!!!!!!!!!!! and do order in the database
 //delete all the groups that the user joined
 export async function deleteUserJoinedGroups(uid) {
     const userRef = fb.doc(db, 'usersById', uid)
@@ -77,22 +76,23 @@ export async function deleteUserJoinedGroups(uid) {
             const groupRef = fb.doc(db, 'groups', userDoc.data().groups_I_joined[i])
             const groupDoc = await fb.getDoc(groupRef)
             if(groupDoc.exists()){
+                var updateParticipants = []
                 for(var j=0; j<groupDoc.data().participants.length; j++){
-                    var updateParticipants = []//take out of the inside loop
                         if(groupDoc.data().participants[j] != uid){
                             updateParticipants.push(groupDoc.data().participants[j])
-                        }
-                        await fb.updateDoc(groupRef, {participants: updateParticipants})//take out of the inside loop
                     }
                 }
+                await fb.updateDoc(groupRef, {participants: updateParticipants})
+                
             }
             await fb.updateDoc(userRef, {groups_I_joined: []})
             return "done"
         }
-        else{
-            console.log("error")
-        }
     }
+    else{
+        console.log("error")
+    }
+}
 
 //update user details
 export async function updateUserDetails(uid, name, birth_date, phone) {
@@ -201,4 +201,3 @@ export async function blockUser(uid) {
     return "done"
 }
 
-//todo: להוסיף בדיקת תקינות לעדכוני פרטים(תאריכים וכו)
