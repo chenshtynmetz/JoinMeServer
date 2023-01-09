@@ -5,7 +5,17 @@ const postRouter = express.Router()
 
 //increase the number of reports of the user
 postRouter.post('/addReportToUser', async (req, res) => {
-    const userList = await post_functions.addReportToUser(req.query.uid)
+  // console.log("posts")
+  // var uid = '';
+  // req.on('data', function (data) {
+  //   console.log("hi")
+  //   uid += data;
+    
+  // });
+  // console.log(JSON.stringify(req.body))
+  const uid = req.body.uid
+  // console.log(uid.toString())
+  const userList = await post_functions.addReportToUser(uid)
     if (userList.length === 0 ) {
       return res.status(404).send()
     }

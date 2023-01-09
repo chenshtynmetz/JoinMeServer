@@ -33,7 +33,6 @@ export async function getUsers() {
 export async function getMyCreatedHistory(uid){
   const userRef = fb.doc(db, 'usersById', uid)
   const userDoc = await fb.getDoc(userRef)
-  // console.log("here")
   var groupsList = []
   if(userDoc.exists()){
     for(var i=0; i<userDoc.data().my_groups.length; i++){
@@ -60,8 +59,10 @@ export async function getMyJoinedHistory(uid){
     for(var i=0; i<userDoc.data().groups_I_joined.length; i++){
       const groupRef = fb.doc(db, 'groups', userDoc.data().groups_I_joined[i])
       const groupDoc = await fb.getDoc(groupRef)
-      const {title, city, date, time, is_happened, gid} = groupDoc.data()
+      const gid = userDoc.data().groups_I_joined[i]
+      const {title, city, date, time, is_happened} = groupDoc.data()
       groupsList[i] = {title, city, date, time, is_happened, gid}
+      // console.log(groupsList[i])
     }
     return groupsList
   }
@@ -82,7 +83,7 @@ export async function getGroupParticipants(gid){
       const userDoc = await fb.getDoc(userRef)
       const {name, mail, phone, uid} = userDoc.data()
       usersList[i] = {name, mail, phone, uid}
-      console.log(usersList[i])
+      // console.log(usersList[i])
     }
     return usersList
   }
