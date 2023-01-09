@@ -190,7 +190,6 @@ export async function addUserToGroup(gid, uid) {
 export async function blockUser(uid) {
     const userRef = fb.doc(db, 'usersById', uid)
     const userDoc = await fb.getDoc(userRef)
-    console.log("here")
     if(userDoc.exists()){
         await fb.setDoc(fb.doc(db, "blockUsers", uid), userDoc.data());
         await fb.deleteDoc(fb.doc(db, "usersById", uid))
