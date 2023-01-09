@@ -42,7 +42,6 @@ export async function getMyCreatedHistory(uid){
       const gid = userDoc.data().my_groups[i]
       const {title, city, date, time, is_happened} = groupDoc.data()
       groupsList[i] = {title, city, date, time, is_happened, gid}
-      console.log(groupsList[i])
     }
     return groupsList
   }
@@ -83,6 +82,7 @@ export async function getGroupParticipants(gid){
       const userDoc = await fb.getDoc(userRef)
       const {name, mail, phone, uid} = userDoc.data()
       usersList[i] = {name, mail, phone, uid}
+      console.log(usersList[i])
     }
     return usersList
   }
