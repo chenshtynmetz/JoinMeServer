@@ -200,3 +200,15 @@ export async function blockUser(uid) {
     return "done"
 }
 
+export async function isHappened(gid, flag){
+    const groupRef = fb.doc(db, 'groups', gid)
+    const groupDoc = await fb.getDoc(groupRef)
+    if(groupDoc.exists()){
+        await fb.updateDoc(groupRef, {is_happened: flag})
+    }
+    else{
+        console.log("error")
+    }
+    return "done"
+}
+

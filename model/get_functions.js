@@ -107,7 +107,7 @@ export async function getReportedUsers() {
 
 //Check if the user is blocked
 export async function checkBlockedUser(uid){
-  const userRef = fb.doc(db, 'usersById', uid)
+  const userRef = fb.doc(db, 'blockUsers', uid)
   const userDoc = await fb.getDoc(userRef)
   if(userDoc.exists()){
     return "blocked"
@@ -118,10 +118,11 @@ export async function checkBlockedUser(uid){
 }
 
 // Get user details
-export async function getUser() {
-  const userRef = fb.doc(db, 'blockUsers', uid)
+export async function getUser(uid) {
+  const userRef = fb.doc(db, 'usersById', uid)
   const userDoc = await fb.getDoc(userRef)
   if(userDoc.exists()){
+    console.log(userDoc.data())
     return userDoc.data()
   }
   else{

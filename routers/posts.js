@@ -106,5 +106,13 @@ postRouter.post('/blockThisUser', async (req, res) => {
   return res.status(200).send("done")
 })
 
+postRouter.post('/isHappened', async(req, res) => {
+  const ans = await post_functions.isHappened(req.body.gid, req.body.flag)
+  if (ans.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+})
+
 
 export { postRouter }
