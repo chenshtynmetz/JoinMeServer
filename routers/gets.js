@@ -60,4 +60,13 @@ getRouter.get('/checkBlockedUser', async(req, res) =>{
   return res.status(200).send(groupsList)
 })
 
+//Check if the user is blocked
+getRouter.get('/userDetails', async(req, res) =>{
+  const groupsList = await get_functions.getUser(req.query.uid)
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
 export { getRouter }
