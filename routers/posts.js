@@ -99,6 +99,8 @@ postRouter.post('/addUserToGroup', async (req, res) => {
 
 //block user
 postRouter.post('/blockThisUser', async (req, res) => {
+  const ansDelete = await post_functions.deleteUserGroups(req.body.uid)
+  const ansJoinedDelete = await post_functions.deleteUserJoinedGroups(req.body.uid)
   const userList = await post_functions.blockUser(req.body.uid)
   if (userList.length === 0 ) {
     return res.status(404).send()

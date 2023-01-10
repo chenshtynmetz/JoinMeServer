@@ -23,8 +23,8 @@ export async function getUsers() {
     const userSnapshot = await fb.getDocs(fb.collection(db, 'usersById'))
     const userListFromDB = userSnapshot.docs || []
     const userList = userListFromDB.map(doc=> {
-      const {name, mail,uid} = doc.data()
-      return {name,mail,uid}
+      const {name, mail,uid, num_of_reports} = doc.data()
+      return {name,mail,uid, num_of_reports}
     })
     return userList;
 }
