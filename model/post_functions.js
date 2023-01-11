@@ -83,8 +83,9 @@ export async function deleteUserJoinedGroups(uid) {
                             updateParticipants.push(groupDoc.data().participants[j])
                     }
                 }
+                const numOfPart = groupDoc.data().num_of_participant - 1
                 await fb.updateDoc(groupRef, {participants: updateParticipants})
-                
+                await fb.updateDoc(groupRef, { num_of_participant: numOfPart})
             }
             await fb.updateDoc(userRef, {groups_I_joined: []})
             return "done"
