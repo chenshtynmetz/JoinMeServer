@@ -143,7 +143,7 @@ export async function getCategories() {
 }
 
 //count groups from each category 
-export async function getCategories() {
+export async function countCategories() {
   const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
   const categoryListFromDB = cateroriesSnapshot.docs || []
   const coll = fb.collection(db, "groups");
@@ -186,6 +186,19 @@ export async function getGroupDetails(gid) {
     console.log("error")
     return null
   }
+}
+
+//get top users   
+export async function getTopUsers() {
+  const q = fb.query(fb.collection(db, 'usersById'), fb.orderBy("my_groups", "desc"), fb.limit(3));
+  const userSnapshot = await fb.getDocs(q)
+  const userListFromDB = userSnapshot.docs || []
+  const userList = userListFromDB.map(doc=> {
+    const num = doc.data().my_groups.length
+    const {name} = doc.data()
+    return {name, num}
+  })
+  return userList;
 }
 
 
