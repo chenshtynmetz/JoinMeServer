@@ -120,15 +120,18 @@ export async function checkBlockedUser(uid){
 
 // Get user details
 export async function getUser(uid) {
+  console.log(uid)
   const userRef = fb.doc(db, 'usersById', uid)
   const userDoc = await fb.getDoc(userRef)
   if(userDoc.exists()){
-    console.log(userDoc.data())
-    return userDoc.data()
+    const { name } = userDoc.data()
+    console.log({ name })
+    return { name }
   }
   else{
-    return ""
+    console.log("error")
   }
+  return null
 }
 
 // Get a list of users to the block page 
@@ -136,8 +139,8 @@ export async function getCategories() {
   const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
   const categoryListFromDB = cateroriesSnapshot.docs || []
   const categoryList = categoryListFromDB.map(doc=> {
-    const {name} = doc.data()
-    return {name}
+    const { name } = doc.data()
+    return { name }
   })
   return categoryList;
 }
@@ -176,11 +179,11 @@ export async function compareHappened() {
 
 //get group details  
 export async function getGroupDetails(gid) {
-  const groupRef = fb.doc(db, 'usersById', gid)
+  const groupRef = fb.doc(db, 'groups', gid)
   const groupDoc = await fb.getDoc(groupRef)
   if(groupDoc.exists()){
     const {name, mail, phone, uid} = groupDoc.data()
-    return usersList
+    return {name, mail, phone, uid}
   }
   else{
     console.log("error")

@@ -62,11 +62,11 @@ getRouter.get('/checkBlockedUser', async(req, res) =>{
 
 //get all the categories
 getRouter.get('/getCategories', async(req, res) =>{
-  const groupsList = await get_functions.getCategories()
-  if (groupsList.length === 0){
+  const categoryList = await get_functions.getCategories()
+  if (categoryList.length === 0){
     return res.status(404).send()
   }
-  return res.status(200).send(groupsList)
+  return res.status(200).send(categoryList)
 })
 
 //count groups from each category
@@ -89,13 +89,20 @@ getRouter.get('/compareHappened', async(req, res) =>{
 
 //get group details 
 getRouter.get('/getGroupDetails', async(req, res) =>{
-  const groupsList = await get_functions.getGroupDetails(req.query.gid)
-  if (groupsList.length === 0){
+  const group = await get_functions.getGroupDetails(req.query.gid)
+  if (group.length === 0){
     return res.status(404).send()
   }
-  return res.status(200).send(groupsList)
+  return res.status(200).send(group)
 })
 
+getRouter.get('/getUserDetails', async(req, res) =>{
+  const user = await get_functions.getUser(req.query.uid)
+  if (user.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(user)
+})
 //get top users 
 getRouter.get('/getTopUsers', async(req, res) =>{
   const groupsList = await get_functions.getTopUsers()
