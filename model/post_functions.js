@@ -212,3 +212,8 @@ export async function isHappened(gid, flag){
     return "done"
 }
 
+//add new category to the database
+export async function addCategory(category) {
+    await fb.addDoc(fb.collection(db, "categories"), {name: category});
+    return "done"
+}

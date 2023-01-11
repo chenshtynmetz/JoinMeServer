@@ -129,3 +129,14 @@ export async function getUser(uid) {
     return ""
   }
 }
+
+// Get a list of users to the block page 
+export async function getCategories() {
+  const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
+  const categoryListFromDB = cateroriesSnapshot.docs || []
+  const categoryList = categoryListFromDB.map(doc=> {
+    const {name} = doc.data()
+    return {name}
+  })
+  return categoryList;
+}
