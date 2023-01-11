@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import * as fb from 'firebase/firestore'
 import 'firebase/auth';
 import 'firebase/firestore'
+import { FieldValue } from 'firebase/firestore';
 
 
 //connect to firebase
@@ -178,7 +179,9 @@ export async function addUserToGroup(gid, uid) {
             groupUsers.push(groupDoc.data().participants[i])
         }
         groupUsers.push(uid)
+        const numOfPart = groupDoc.data().num_of_participant + 1
         await fb.updateDoc(groupRef, {participants: groupUsers})
+        await fb.updateDoc(groupRef, { num_of_participant: numOfPart})
     }
     else{
         console.log("error")

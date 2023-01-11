@@ -69,4 +69,31 @@ getRouter.get('/getCategories', async(req, res) =>{
   return res.status(200).send(groupsList)
 })
 
+//count groups from each category
+getRouter.get('/countCategories', async(req, res) =>{
+  const groupsList = await get_functions.countCategories()
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
+//compare the number of groups that opened to the groups that happened in each category 
+getRouter.get('/compareHappened', async(req, res) =>{
+  const groupsList = await get_functions.compareHappened()
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
+//get group details 
+getRouter.get('/getGroupDetails', async(req, res) =>{
+  const groupsList = await get_functions.getGroupDetails(req.query.gid)
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
 export { getRouter }

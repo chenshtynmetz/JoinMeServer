@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import * as fb from 'firebase/firestore'
 import 'firebase/auth';
 import 'firebase/firestore'
+import { where } from 'firebase/firestore';
 
 
 //connect to firebase
@@ -140,3 +141,51 @@ export async function getCategories() {
   })
   return categoryList;
 }
+
+//count groups from each category 
+export async function getCategories() {
+  const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
+  const categoryListFromDB = cateroriesSnapshot.docs || []
+  const coll = fb.collection(db, "groups");
+  var countList = []
+  categoryListFromDB.forEach(async category => {
+    var query_ = fb.query(coll, where('title', '==', category.name));
+    var snapshot = await fb.getCountFromServer(query_);
+    countList.push({name:category.name, count:snapshot.data().count})
+  });
+  return countList
+}
+
+//compare the number of groups that opened to the groups that happened in each category 
+export async function compareHappened() {
+  const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
+  const categoryListFromDB = cateroriesSnapshot.docs || []
+  const coll = fb.collection(db, "groups");
+  var countListTotal = []
+  var countListHappened = []
+  categoryListFromDB.forEach(async category => {
+    var query_ = fb.query(coll, where('title', '==', category.name));
+    var snapshot = await fb.getCountFromServer(query_);
+    countListTotal.push({name:category.name, count:snapshot.data().count})
+    query_ = fb.query(coll, where('title', '==', category.name), where('is_happened', '==', true));
+    snapshot = await fb.getCountFromServer(query_);
+    countListHappened.push({name:category.name, count:snapshot.data().count})
+  });
+  return {countListTotal, countListHappened}
+}
+
+//get group details  
+export async function getGroupDetails(gid) {
+  const groupRef = fb.doc(db, 'usersById', gid)
+  const groupDoc = await fb.getDoc(groupRef)
+  if(groupDoc.exists()){
+    const {name, mail, phone, uid} = groupDoc.data()
+    return usersList
+  }
+  else{
+    console.log("error")
+    return null
+  }
+}
+
+
