@@ -53,11 +53,12 @@ getRouter.get('/presentReportedUsers', async (req, res) => {
 
 //Check if the user is blocked
 getRouter.get('/checkBlockedUser', async(req, res) =>{
-  const groupsList = await get_functions.checkBlockedUser(req.query.uid)
-  if (groupsList.length === 0){
+  const check = await get_functions.checkBlockedUser(req.query.uid)
+  console.log(check)
+  if (check.length === 0){
     return res.status(404).send()
   }
-  return res.status(200).send(groupsList)
+  return res.status(200).send(check)
 })
 
 //get all the categories

@@ -129,8 +129,22 @@ export async function updateGroupDetails(gid, title, city, date, time, num_of_pa
 }
 
 //add new user to the database
-export async function addUserToDb(user) {
-    await fb.setDoc(fb.doc(db, "usersById", user.uid), user);
+export async function addUserToDb(uid, name, phone, email, birthday) {
+    // console.log(Object.entries(user))
+    // console.log(user.data())
+    console.log(uid)
+    await fb.setDoc(fb.doc(db, "usersById", uid), 
+    {
+        birth_date: birthday,
+        groups_I_joined: [],
+        mail: email,
+        my_groups: [],
+        name: name,
+        num_of_reports: 0,
+        phone: phone,
+        success_creating_groups: 0,
+        uid: uid
+    });
     return "done"
 }
 

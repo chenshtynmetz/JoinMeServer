@@ -72,8 +72,8 @@ postRouter.post('/updateGroupDetails', async (req, res) => {
 
 //add new user to the database
 postRouter.post('/addUser', async (req, res) => {
-  const userList = await post_functions.addUserToDb(req.body.user)
-  if (userList.length === 0 ) {
+  const ans = await post_functions.addUserToDb(req.body.uid, req.body.name, req.body.phone, req.body.email, req.body.date)
+  if (ans.length === 0 ) {
     return res.status(404).send()
   }
   return res.status(200).send("done")

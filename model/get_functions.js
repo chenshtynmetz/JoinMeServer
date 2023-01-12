@@ -114,7 +114,7 @@ export async function checkBlockedUser(uid){
     return "blocked"
   }
   else{
-    return "not blocked"
+    return "not"
   }
 }
 
@@ -125,7 +125,6 @@ export async function getUser(uid) {
   const userDoc = await fb.getDoc(userRef)
   if(userDoc.exists()){
     const { name } = userDoc.data()
-    console.log({ name })
     return { name }
   }
   else{
@@ -182,8 +181,11 @@ export async function getGroupDetails(gid) {
   const groupRef = fb.doc(db, 'groups', gid)
   const groupDoc = await fb.getDoc(groupRef)
   if(groupDoc.exists()){
-    const {name, mail, phone, uid} = groupDoc.data()
-    return {name, mail, phone, uid}
+    const headObj = await getUser(groupDoc.data().head_of_group)
+    const head_of_group_uid = headObj.name
+    console.log(head_of_group_uid)
+    const {title, city, time, date, num_of_participant} = groupDoc.data()
+    return {title, city, time, date, num_of_participant, head_of_group_uid}
   }
   else{
     console.log("error")
