@@ -146,8 +146,8 @@ export async function addUserToDb(uid, name, phone, email, birthday) {
 }
 
 //add new group to the database
-export async function addGroupToDb(gid, title, city, time, date, head_uid, min, max) {
-    await fb.addDoc(fb.doc(db, "groups", gid), 
+export async function addGroupToDb(title, city, time, date, head_uid, min, max) {
+    const docRef = await fb.addDoc(fb.collection(db, "groups"), 
     {
         city: city,
         date: date,
@@ -164,11 +164,11 @@ export async function addGroupToDb(gid, title, city, time, date, head_uid, min, 
     const userRef = fb.doc(db, 'usersById', head_uid)
     const userDoc = await fb.getDoc(userRef)
     if(userDoc.exists()){
-        myGroups = []
+        var myGroups = []
         for(var i=0; i<userDoc.data().my_groups.length; i++){
             myGroups.push(userDoc.data().my_groups[i])
         }
-        myGroups.push(group)
+        myGroups.push(docRef.id)
         await fb.updateDoc(userRef, {my_groups: myGroups})
     }
     else{
