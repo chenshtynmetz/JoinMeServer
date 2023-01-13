@@ -183,12 +183,11 @@ export async function addUserToGroup(gid, uid) {
     const userRef = fb.doc(db, 'usersById', uid)
     const userDoc = await fb.getDoc(userRef)
     if(userDoc.exists()){
-        myGroups = []
+        var myGroups = []
         for(var i=0; i<userDoc.data().groups_I_joined.length; i++){
             myGroups.push(userDoc.data().groups_I_joined[i])
         }
         myGroups.push(gid)
-        await fb.updateDoc(userRef, {groups_I_joined: myGroups})
     }
     else{
         console.log("error")
@@ -198,14 +197,18 @@ export async function addUserToGroup(gid, uid) {
     const groupRef = fb.doc(db, 'groups', gid)
     const groupDoc = await fb.getDoc(groupRef)
     if(groupDoc.exists()){
-        groupUsers = []
+        var groupUsers = []
         for(var i=0; i<groupDoc.data().participants.length; i++){
+            if(groupDoc.data().participants[i] === uid){
+                return ""
+            }
             groupUsers.push(groupDoc.data().participants[i])
         }
         groupUsers.push(uid)
         const numOfPart = groupDoc.data().num_of_participant + 1
         await fb.updateDoc(groupRef, {participants: groupUsers})
         await fb.updateDoc(groupRef, { num_of_participant: numOfPart})
+        await fb.updateDoc(userRef, {groups_I_joined: myGroups})
     }
     else{
         console.log("error")

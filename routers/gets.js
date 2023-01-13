@@ -104,9 +104,28 @@ getRouter.get('/getUserDetails', async(req, res) =>{
   }
   return res.status(200).send(user)
 })
+
 //get top users 
 getRouter.get('/getTopUsers', async(req, res) =>{
   const groupsList = await get_functions.getTopUsers()
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
+//get groups by title
+getRouter.get('/getGroups', async(req, res) =>{
+  const groupsList = await get_functions.getGroups(req.query.title)
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
+//get groups by title and city
+getRouter.get('/getGroupsCity', async(req, res) =>{
+  const groupsList = await get_functions.getGroupsCity(req.query.title, req.query.city)
   if (groupsList.length === 0){
     return res.status(404).send()
   }

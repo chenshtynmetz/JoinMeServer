@@ -206,4 +206,33 @@ export async function getTopUsers() {
   return userList;
 }
 
+//get groups by title   
+export async function getGroups(title) {
+  const q = fb.query(fb.collection(db, 'groups'), fb.where("title", "==", title), fb.where("is_happened", "==", false));
+  const groupsSnapshot = await fb.getDocs(q)
+  const groupListFromDB = groupsSnapshot.docs || []
+  const groupList = groupListFromDB.map(doc=> {
+    const {city, max_participants, num_of_participant} = doc.data()
+    const id = doc.id
+    const date = doc.data().date + " " + doc.data().time
+    return {title, city, date, id, max_participants, num_of_participant}
+  })
+  return groupList;
+}
+
+//get groups by title and city
+export async function getGroupsCity(title, city) {
+  const q = fb.query(fb.collection(db, 'groups'), fb.where("title", "==", title), fb.where("city", "==", city), fb.where("is_happened", "==", false));
+  const groupsSnapshot = await fb.getDocs(q)
+  const groupListFromDB = groupsSnapshot.docs || []
+  const groupList = groupListFromDB.map(doc=> {
+    const {max_participants, num_of_participant} = doc.data()
+    const id = doc.id
+    const date = doc.data().date + " " + doc.data().time
+    return {title, city, date, id, max_participants, num_of_participant}
+  })
+  return groupList;
+}
+
+
 
