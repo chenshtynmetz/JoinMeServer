@@ -2,6 +2,8 @@
 
 # Join-me
 
+## This code is used by the server for the JOIN ME application
+
 ## Teammates ✨
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
