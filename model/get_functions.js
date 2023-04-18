@@ -63,7 +63,6 @@ export async function getMyJoinedHistory(uid){
       const gid = userDoc.data().groups_I_joined[i]
       const {title, city, date, time, is_happened} = groupDoc.data()
       groupsList[i] = {title, city, date, time, is_happened, gid}
-      // console.log(groupsList[i])
     }
     return groupsList
   }
@@ -146,15 +145,18 @@ export async function getCategories() {
 
 //count groups from each category 
 export async function countCategories() {
-  const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
-  const categoryListFromDB = cateroriesSnapshot.docs || []
+  // const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
+  // const categoryListFromDB = cateroriesSnapshot.docs || []
   const coll = fb.collection(db, "groups");
   var countList = []
-  categoryListFromDB.forEach(async category => {
-    var query_ = fb.query(coll, where('title', '==', category.name));
+  var categoryList = ["Football", "Group games", "Basketball", "Hang out", "Minnian", "Volunteer"]
+  for(const category of categoryList) {
+    console.log(category)
+    var query_ = fb.query(coll, where('title', '==', category));
     var snapshot = await fb.getCountFromServer(query_);
-    countList.push({name:category.name, count:snapshot.data().count})
-  });
+    var obj = {name:category, count:snapshot.data().count}
+    countList.push(obj)
+  };
   return countList
 }
 
@@ -162,18 +164,19 @@ export async function countCategories() {
 export async function compareHappened() {
   const cateroriesSnapshot = await fb.getDocs(fb.collection(db, 'categories'))
   const categoryListFromDB = cateroriesSnapshot.docs || []
+  console.log(categoryListFromDB[0].data().name)
   const coll = fb.collection(db, "groups");
   var countListTotal = []
   var countListHappened = []
-  categoryListFromDB.forEach(async category => {
-    var query_ = fb.query(coll, where('title', '==', category.name));
+  for(const category of categoryListFromDB){
+    var query_ = fb.query(coll, where('title', '==', category.data().name));
     var snapshot = await fb.getCountFromServer(query_);
-    countListTotal.push({name:category.name, count:snapshot.data().count})
-    query_ = fb.query(coll, where('title', '==', category.name), where('is_happened', '==', true));
+    countListTotal.push({name:category.data().name, count:snapshot.data().count})
+    query_ = fb.query(coll, where('title', '==', category.data().name), where('is_happened', '==', true));
     snapshot = await fb.getCountFromServer(query_);
-    countListHappened.push({name:category.name, count:snapshot.data().count})
-  });
-  return {countListTotal, countListHappened}
+    countListHappened.push({name:category.data().name, count:snapshot.data().count})
+  };
+  return [countListTotal, countListHappened]
 }
 
 //get group details  
@@ -199,9 +202,9 @@ export async function getTopUsers() {
   const userSnapshot = await fb.getDocs(q)
   const userListFromDB = userSnapshot.docs || []
   const userList = userListFromDB.map(doc=> {
-    const num = doc.data().my_groups.length
+    const count = doc.data().my_groups.length
     const {name} = doc.data()
-    return {name, num}
+    return {name, count}
   })
   return userList;
 }
