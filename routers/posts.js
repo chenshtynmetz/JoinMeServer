@@ -126,4 +126,12 @@ postRouter.post('/addCategory', async(req, res) => {
   return res.status(200).send("done")
 })
 
+postRouter.post('/openWhatsappGroup', async(req, res) => {
+  const ans = await post_functions.openWhatsappGroup(req.body.gid)
+  if (ans.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+})
+
 export { postRouter }

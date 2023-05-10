@@ -2,7 +2,8 @@ import { initializeApp } from 'firebase/app';
 import * as fb from 'firebase/firestore'
 import 'firebase/auth';
 import 'firebase/firestore'
-import { FieldValue } from 'firebase/firestore';
+// import { FieldValue } from 'firebase/firestore';
+import * as app from "../app.js"
 
 
 //connect to firebase
@@ -130,6 +131,9 @@ export async function updateGroupDetails(gid, title, city, date, time, num_of_pa
 
 //add new user to the database
 export async function addUserToDb(uid, name, phone, email, birthday) {
+    if(phone[0] == 0){
+        phone = "972" + phone.substring(1)
+    }
     await fb.setDoc(fb.doc(db, "usersById", uid), 
     {
         birth_date: birthday,
@@ -247,3 +251,35 @@ export async function addCategory(category) {
     await fb.addDoc(fb.collection(db, "categories"), {name: category});
     return "done"
 }
+
+export async function openWhatsappGroup(gid) {
+    var phoneList = []
+    const groupRef = fb.doc(db, 'groups', gid)
+    const groupDoc = await fb.getDoc(groupRef)
+    if(groupDoc.exists()){
+      for(var i=0; i<groupDoc.data().participants.length; i++){
+        const userRef = fb.doc(db, 'usersById', groupDoc.data().participants[i])
+        const userDoc = await fb.getDoc(userRef)
+        phoneList[i]  = userDoc.data().phone + "@c.us"
+      }
+        var groupName = groupDoc.data().title + " " + groupDoc.data().city + " " + groupDoc.data().date
+        // app.client.initialize();
+        app.client.on('qr', qr => {
+            qrcode.generate(qr, {small: true});
+        });
+     
+        app.client.on('ready', () => {
+            console.log("client ready")
+            app.client.createGroup(groupName, phoneList)
+        });
+        // app.client.initialize();
+        console.log(groupName)
+    }
+    else{
+      console.log("error")
+      return null
+    }
+    return "done"
+}
+
+
