@@ -2,10 +2,13 @@ import { initializeApp } from 'firebase/app';
 import * as fb from 'firebase/firestore'
 import 'firebase/auth';
 import 'firebase/firestore'
+import { createRequire } from "module";
 // import { FieldValue } from 'firebase/firestore';
 import * as app from "../app.js"
 
-
+const require = createRequire(import.meta.url);
+// const require = app.require
+const { GroupChat } = require('whatsapp-web.js');
 //connect to firebase
 const firebaseConfig = {
     apiKey: "AIzaSyAMCzLhOCo9FEZTEB8sSEOtmFGjkinb74o",
@@ -150,7 +153,7 @@ export async function addUserToDb(uid, name, phone, email, birthday) {
 }
 
 //add new group to the database
-export async function addGroupToDb(title, city, time, date, head_uid, min, max) {
+export async function addGroupToDb(title, city, time, date, head_uid, min, max, wid) {
     const docRef = await fb.addDoc(fb.collection(db, "groups"), 
     {
         city: city,
@@ -162,7 +165,8 @@ export async function addGroupToDb(title, city, time, date, head_uid, min, max) 
         num_of_participant: 1,
         participants: [head_uid],
         time: time,
-        title: title
+        title: title,
+        wid: wid
     });
     //add group to user db
     const userRef = fb.doc(db, 'usersById', head_uid)
@@ -256,24 +260,39 @@ export async function openWhatsappGroup(gid) {
     var phoneList = []
     const groupRef = fb.doc(db, 'groups', gid)
     const groupDoc = await fb.getDoc(groupRef)
+    var head_phone = ""
     if(groupDoc.exists()){
       for(var i=0; i<groupDoc.data().participants.length; i++){
         const userRef = fb.doc(db, 'usersById', groupDoc.data().participants[i])
         const userDoc = await fb.getDoc(userRef)
         phoneList[i]  = userDoc.data().phone + "@c.us"
+        if (userDoc.data().uid === groupDoc.data().head_of_group){
+            head_phone = userDoc.data().phone + "@c.us"
+        }
       }
         var groupName = groupDoc.data().title + " " + groupDoc.data().city + " " + groupDoc.data().date
-        // app.client.initialize();
-        app.client.on('qr', qr => {
-            qrcode.generate(qr, {small: true});
-        });
-     
-        app.client.on('ready', () => {
-            console.log("client ready")
-            app.client.createGroup(groupName, phoneList)
-        });
-        // app.client.initialize();
-        console.log(groupName)
+        var group_id = await app.client.createGroup(groupName, phoneList)
+        var wid = group_id.gid || group_id._serialized
+        await fb.updateDoc(groupRef, {wid: wid._serialized})
+        // console.log(wid)
+        app.client.getChatById(wid._serialized).then((group)=>{
+            // console.log(group.info)
+            if(head_phone != ""){
+                    group.promoteParticipants([head_phone]).then(()=>{
+                        group.setDescription("hello everyone!\n This is the updates group for "+ groupName + " " + groupDoc.data().time + " from Join Me app")//.then(()=>{
+                            // group.leave()
+                        // })
+                    }) 
+            }
+            else{
+                group.setDescription("hello" + groupDoc.data().time)//.then(()=>{
+                    // group.leave()
+                // })
+            }
+        }) 
+        
+        
+        // console.log(groupName)
     }
     else{
       console.log("error")
@@ -282,4 +301,16 @@ export async function openWhatsappGroup(gid) {
     return "done"
 }
 
+export async function joinToWhatsappGroup(gid, uid) {
+    const groupRef = fb.doc(db, 'groups', gid)
+    const groupDoc = await fb.getDoc(groupRef)
+    const wid = groupDoc.data().wid
+    const userRef = fb.doc(db, 'usersById', uid)
+    const userDoc = await fb.getDoc(userRef)
+    const userPhone = userDoc.data().phone + "@c.us"
+    app.client.getChatById(wid._serialized).then((group)=>{
+        group.addParticipants([userPhone])
+    })
+    return "done"
+}
 

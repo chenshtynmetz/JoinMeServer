@@ -215,10 +215,10 @@ export async function getGroups(title) {
   const groupsSnapshot = await fb.getDocs(q)
   const groupListFromDB = groupsSnapshot.docs || []
   const groupList = groupListFromDB.map(doc=> {
-    const {city, max_participants, num_of_participant} = doc.data()
+    const {city, max_participants, min_participants, num_of_participant} = doc.data()
     const id = doc.id
     const date = doc.data().date + " " + doc.data().time
-    return {title, city, date, id, max_participants, num_of_participant}
+    return {title, city, date, id, max_participants, min_participants, num_of_participant}
   })
   return groupList;
 }

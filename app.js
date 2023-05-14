@@ -17,6 +17,7 @@ const client = new Client();
 async function createQr(){
     client.on('qr', qr => {
         qrcode.generate(qr, {small: true});
+        console.log(client.info)
     });
  
 }
@@ -24,9 +25,10 @@ async function createQr(){
 createQr().then(()=>{
     app.listen(3000,  () => {
         console.log("Listening on port 3000...")
+        
     })
 })
 
 client.initialize();
-export { client }
+export { client, require }
 

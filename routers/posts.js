@@ -81,7 +81,7 @@ postRouter.post('/addUser', async (req, res) => {
 
 //add new group to the database
 postRouter.post('/addGroup', async (req, res) => {
-  const userList = await post_functions.addGroupToDb(req.body.title, req.body.city, req.body.time, req.body.date, req.body.head_uid, req.body.min, req.body.max)
+  const userList = await post_functions.addGroupToDb(req.body.title, req.body.city, req.body.time, req.body.date, req.body.head_uid, req.body.min, req.body.max, req.body.wid)
   if (userList.length === 0 ) {
     return res.status(404).send()
   }
@@ -128,6 +128,14 @@ postRouter.post('/addCategory', async(req, res) => {
 
 postRouter.post('/openWhatsappGroup', async(req, res) => {
   const ans = await post_functions.openWhatsappGroup(req.body.gid)
+  if (ans.length === 0 ) {
+    return res.status(404).send()
+  }
+  return res.status(200).send("done")
+})
+
+postRouter.post('/joinToWhatsappGroup', async(req, res) => {
+  const ans = await post_functions.joinToWhatsappGroup(req.body.gid, req.body.uid)
   if (ans.length === 0 ) {
     return res.status(404).send()
   }
