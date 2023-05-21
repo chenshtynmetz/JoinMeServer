@@ -279,20 +279,13 @@ export async function openWhatsappGroup(gid) {
             // console.log(group.info)
             if(head_phone != ""){
                     group.promoteParticipants([head_phone]).then(()=>{
-                        group.setDescription("hello everyone!\n This is the updates group for "+ groupName + " " + groupDoc.data().time + " from Join Me app")//.then(()=>{
-                            // group.leave()
-                        // })
+                        group.setDescription("hello everyone!\n This is the updates group for "+ groupName + " " + groupDoc.data().time + " from Join Me app")   
                     }) 
             }
             else{
-                group.setDescription("hello" + groupDoc.data().time)//.then(()=>{
-                    // group.leave()
-                // })
+                group.setDescription("hello" + groupDoc.data().time)
             }
         }) 
-        
-        
-        // console.log(groupName)
     }
     else{
       console.log("error")
@@ -308,7 +301,7 @@ export async function joinToWhatsappGroup(gid, uid) {
     const userRef = fb.doc(db, 'usersById', uid)
     const userDoc = await fb.getDoc(userRef)
     const userPhone = userDoc.data().phone + "@c.us"
-    app.client.getChatById(wid._serialized).then((group)=>{
+    app.client.getChatById(wid).then((group)=>{
         group.addParticipants([userPhone])
     })
     return "done"
