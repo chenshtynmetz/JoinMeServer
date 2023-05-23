@@ -43,7 +43,7 @@ export async function create_dataset(){
         console.error(e);
     }
     //fields
-    var csv = "uid, category\r\n";
+    var csv = "uid,category\r\n";
     await fs.appendFile("model.csv", csv, (err) => {
         if (err) {
             console.log(err);
