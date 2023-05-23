@@ -30,6 +30,7 @@ async function get_groups(){
     const {title, participants} = doc.data()
     return {title, participants}
   })
+  console.log(groupList)
   return groupList
 }
 
@@ -50,7 +51,7 @@ export async function create_dataset(){
             console.log("success");
         }
     });
-    var groupList = get_groups()
+    var groupList = await get_groups()
     for(const group of groupList){
         for(const participant of group.participants){
             csv = participant +","+group.title+"\r\n"
