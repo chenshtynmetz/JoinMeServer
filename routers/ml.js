@@ -13,9 +13,9 @@ mlRouter.use(bodyParser.urlencoded({
   */
   mlRouter.use(bodyParser.json());
 
-  mlRouter.get('/train_model', async (req, res) => {
-    const userList = await ml_functions.create_dataset()
-      if (userList.length === 0 ) {
+  mlRouter.get('/trainModel', async (req, res) => {
+    const ans = await ml_functions.create_dataset()
+      if (ans.length === 0 ) {
         return res.status(404).send()
       }
       return res.status(200).send("done")

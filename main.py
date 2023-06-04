@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 from apyori import apriori
+import sys
+import json
+import ast 
 
 def hot_encode(x):
     if(x<= 0):
@@ -25,11 +28,11 @@ for user in users:
     category_list = category.tolist()
     category_set = set(category_list)
     # print(category_list)
-    basket = [0]*len(categories)
-    for cat in category_set:
-        index = categories.tolist().index(cat)
-        basket[index] = 1
-    baskets.append(basket)
+    # basket = [0]*len(categories)
+    # for cat in category_set:
+    #     index = categories.tolist().index(cat)
+    #     basket[index] = 1
+    baskets.append(category_set)
 
 
 # for basket in baskets:
@@ -38,9 +41,15 @@ for user in users:
     # basket = basket_encoded
     # print("hi")
 
-association_rules = apriori(baskets, min_support=0.05)
+association_rules = apriori(baskets, min_support=0.05, min_confidence=0.5)
 association_results = list(association_rules)
-print(association_results)
+res_list = []
+for res in association_results:
+    if(len(res[0]) == 2):
+        res_list.append(list(res[0]))
+print(json.dumps(res_list))
+sys.stdout.flush()
+
     # # Collecting the inferred rules in a dataframe
     # rules = association_rules(frq_items, metric="lift", min_threshold=1)
     # rules = rules.sort_values(['confidence', 'lift'], ascending=[False, False])
