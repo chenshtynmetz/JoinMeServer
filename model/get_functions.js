@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import * as fb from 'firebase/firestore'
 import 'firebase/auth';
 import 'firebase/firestore'
-import { where } from 'firebase/firestore';
+import { where, or } from 'firebase/firestore';
 
 
 //connect to firebase
@@ -221,6 +221,41 @@ export async function getGroups(title) {
     return {title, city, date, id, max_participants, min_participants, num_of_participant}
   })
   return groupList;
+}
+
+//get groups by machine learning   
+export async function getRelatedGroups(category) {
+  const q_pairs = fb.query(fb.collection(db, 'pairsFromTraining'), or(fb.where("pair1", "==", category), fb.where("pair2", "==", category)))
+  const pairsSnapshot = await fb.getDocs(q_pairs)
+  const pairsListFromDB = pairsSnapshot.docs || []
+  const pairsList = pairsListFromDB.map(doc=> {
+    if(doc.data().pair1 == category){
+      const currTitle = doc.data().pair2
+      return currTitle
+    }
+    else{
+      const currTitle = doc.data().pair1
+      return currTitle
+    }
+  })
+  console.log(pairsList)
+  var groupList = []
+  for(const title of pairsList){
+    const q = fb.query(fb.collection(db, 'groups'), fb.where("title", "==", title), fb.where("is_happened", "==", false));
+    const groupsSnapshot = await fb.getDocs(q)
+    const groupListFromDB = groupsSnapshot.docs || []
+    const currGroupList = groupListFromDB.map(doc=> {
+      const {city, max_participants, min_participants, num_of_participant} = doc.data()
+      const id = doc.id
+      const date = doc.data().date + " " + doc.data().time
+      return {title, city, date, id, max_participants, min_participants, num_of_participant}
+    })
+    for(const group of currGroupList){
+      groupList.push(group);
+    }
+  }
+  console.log(groupList)
+  return groupList
 }
 
 //get groups by title and city

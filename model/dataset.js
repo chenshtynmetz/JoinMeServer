@@ -81,7 +81,8 @@ export async function create_dataset(){
             console.log(pairs[p])
             const docRef = await fb.addDoc(fb.collection(db, "pairsFromTraining"),
             {
-                pair: pairs[p]
+                pair1: pairs[p][0],
+                pair2: pairs[p][1]
             })
         }
         // console.log(JSON.parse(data.toString()))

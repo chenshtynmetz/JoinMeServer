@@ -123,6 +123,15 @@ getRouter.get('/getGroups', async(req, res) =>{
   return res.status(200).send(groupsList)
 })
 
+//get groups by machine learning
+getRouter.get('/getRelatedGroups', async(req, res) =>{
+  const groupsList = await get_functions.getRelatedGroups(req.query.title)
+  if (groupsList.length === 0){
+    return res.status(404).send()
+  }
+  return res.status(200).send(groupsList)
+})
+
 //get groups by title and city
 getRouter.get('/getGroupsCity', async(req, res) =>{
   const groupsList = await get_functions.getGroupsCity(req.query.title, req.query.city)
