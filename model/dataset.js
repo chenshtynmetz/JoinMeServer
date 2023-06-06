@@ -65,14 +65,15 @@ export async function create_dataset(){
     }
     const python_process = spawner('python', ['./main.py'])
     python_process.stdout.on('data', async (data) => {
-        const pairsSnapshot = await fb.getDocs(fb.collection(db, 'pairsFromTraining'))
-        const pairsFromDB = pairsSnapshot.docs || []
-        const pairsList = pairsFromDB.map(doc=> {
-            const {pid} = doc.id
-            return {pid}
-        })
-        for(var pair in pairsList){
-            await fb.deleteDoc(fb.doc(db, 'pairsFromTraining', pair))
+        const pairsSnapshot = await fb.getDocs(fb.collection(db, 'pairsFromTraining'));
+        const pairsFromDB = pairsSnapshot.docs || [];
+        const pairsList = pairsFromDB.map(doc => {
+        const pid = doc.id;
+        return pid;
+        });
+
+        for (const pair of pairsList) {
+        await fb.deleteDoc(fb.doc(db, 'pairsFromTraining', pair));
         }
         const pairs = JSON.parse(data.toString())
         // console.log(pairs[0])
