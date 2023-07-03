@@ -153,10 +153,11 @@ export async function addUserToDb(uid, name, phone, email, birthday) {
 }
 
 //add new group to the database
-export async function addGroupToDb(title, city, time, date, head_uid, min, max, wid) {
+export async function addGroupToDb(title, city, address, time, date, head_uid, min, max, wid) {
     const docRef = await fb.addDoc(fb.collection(db, "groups"), 
     {
         city: city,
+        address: address,
         date: date,
         head_of_group: head_uid,
         is_happened: false,
