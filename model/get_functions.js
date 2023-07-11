@@ -187,8 +187,8 @@ export async function getGroupDetails(gid) {
     const headObj = await getUser(groupDoc.data().head_of_group)
     const head_of_group_uid = headObj.name
     console.log(head_of_group_uid)
-    const {title, city, time, date, num_of_participant} = groupDoc.data()
-    return {title, city, time, date, num_of_participant, head_of_group_uid}
+    const {title, city, address, time, date, num_of_participant} = groupDoc.data()
+    return {title, city, address, time, date, num_of_participant, head_of_group_uid}
   }
   else{
     console.log("error")
@@ -215,10 +215,10 @@ export async function getGroups(title) {
   const groupsSnapshot = await fb.getDocs(q)
   const groupListFromDB = groupsSnapshot.docs || []
   const groupList = groupListFromDB.map(doc=> {
-    const {city, max_participants, min_participants, num_of_participant} = doc.data()
+    const {city, address, max_participants, min_participants, num_of_participant} = doc.data()
     const id = doc.id
     const date = doc.data().date + " " + doc.data().time
-    return {title, city, date, id, max_participants, min_participants, num_of_participant}
+    return {title, city, address, date, id, max_participants, min_participants, num_of_participant}
   })
   return groupList;
 }
