@@ -4,7 +4,7 @@
 # This code is used by the server for the JOIN ME application
 
 ## Link to the code of the application:
-https://github.com/ShaharMachluf/Join-me-2
+https://github.com/chenshtynmetz/Final_Project.git
 
 
 ## Teammates ✨
