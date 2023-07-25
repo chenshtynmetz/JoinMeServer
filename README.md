@@ -1,7 +1,7 @@
 ![alt text](https://github.com/ShaharMachluf/Join-me-2/blob/master/logo/Join%20me.png) 
 
 # Join-me
-# This code is used by the server for the JOIN ME application
+## This code is used by the server for the JOIN ME application
 
 ## Link to the code of the application:
 https://github.com/chenshtynmetz/Final_Project.git
@@ -20,3 +20,5 @@ https://github.com/chenshtynmetz/Final_Project.git
     <td align="center"><a href="https://github.com/tavorlevine"><br /><sub><b>Tavor Levine</b></sub></a><br /> </td>
   </tr>
 </table>
+
+
